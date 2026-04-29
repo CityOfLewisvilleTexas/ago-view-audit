@@ -13,10 +13,10 @@ Expected settings:
 """
 
 from arcgis.gis import GIS
-from arcgis.features import FeatureLayerCollection
+from datetime import datetime, timezone
 
 # ── Configuration ─────────────────────────────────────────────────────────────
-# TODO move global variables to .env file and add .env.example file
+# TODO - move environment variables to .env file and create .env.example file
 PORTAL_URL = "https://www.arcgis.com"   # or your portal URL
 USERNAME   = None   # set to a string to prompt for a specific user,
                     # or None to use active Pro session / env credentials
@@ -38,6 +38,7 @@ def get_layer_capabilities(item):
     service-level properties — capabilities, changeTrackingEnabled, etc. live on the service.
     """
     try:
+        from arcgis.features import FeatureLayerCollection
         flc = FeatureLayerCollection.fromitem(item)
         svc_props = flc.properties  # This hits /FeatureServer?f=json
 
@@ -118,16 +119,24 @@ def audit_views(gis):
                 )
     
             # Editor tracking is inherited — always report its value as informational
-            editor_tracking_note = (
-                f"  ℹ  Editor tracking (inherited, read-only on view): "
-                f"{current['editor_tracking']}"
-            )
+            #editor_tracking_note = (
+            #    f"  ℹ  Editor tracking (inherited, read-only on view): "
+            #    f"{current['editor_tracking']}"
+            #)
     
             # ── Report ────────────────────────────────────────────────────────────
             if deviations:
+                # item.created is a Unix timestamp in milliseconds
+                created_dt = datetime.fromtimestamp(item.created / 1000, tz=timezone.utc)
+                created_str = created_dt.strftime("%Y-%m-%d")
+                modified_dt = datetime.fromtimestamp(item.modified / 1000, tz=timezone.utc)
+                modified_str = modified_dt.strftime("%Y-%m-%d")
+
                 owner_info = f"[owner: {item.owner}]"
                 print(f"View: {item.title}  {owner_info}")
                 print(f"  Item ID: {item.id}")
+                print(f"  Created:  {created_str}")
+                print(f"  Last modified:  {modified_str}")
                 issues_found += len(deviations)
                 for d in deviations:
                     print(d)
