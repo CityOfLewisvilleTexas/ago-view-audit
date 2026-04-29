@@ -15,6 +15,7 @@ Expected settings:
 from arcgis.gis import GIS
 
 # ── Configuration ─────────────────────────────────────────────────────────────
+# TODO move global variables to .env file and add .env.example file
 PORTAL_URL = "https://www.arcgis.com"   # or your portal URL
 USERNAME   = None   # set to a string to prompt for a specific user,
                     # or None to use active Pro session / env credentials
