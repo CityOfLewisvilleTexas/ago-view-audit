@@ -13,6 +13,7 @@ Expected settings:
 """
 
 from arcgis.gis import GIS
+from arcgis.features import FeatureLayerCollection
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 # TODO move global variables to .env file and add .env.example file
@@ -37,7 +38,6 @@ def get_layer_capabilities(item):
     service-level properties — capabilities, changeTrackingEnabled, etc. live on the service.
     """
     try:
-        from arcgis.features import FeatureLayerCollection
         flc = FeatureLayerCollection.fromitem(item)
         svc_props = flc.properties  # This hits /FeatureServer?f=json
 
