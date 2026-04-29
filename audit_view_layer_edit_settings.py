@@ -123,22 +123,14 @@ def audit_views(gis):
             )
     
             # ── Report ────────────────────────────────────────────────────────────
-            owner_info = f"[owner: {item.owner}]"
-            print(f"View: {item.title}  {owner_info}")
-            print(f"  Item ID: {item.id}")
-    
-            if not deviations:
-                print(f"  ✔  No issues for view '{item.title}'")
-            else:
+            if deviations:
+                owner_info = f"[owner: {item.owner}]"
+                print(f"View: {item.title}  {owner_info}")
+                print(f"  Item ID: {item.id}")
                 issues_found += len(deviations)
                 for d in deviations:
                     print(d)
-    
-            # Always show editor tracking as informational (it cannot be changed on the view)
-            if current["editor_tracking"] is not None:
-                print(editor_tracking_note)
-    
-            print()
+
         else:
             print("Skipping item without properties.")
             skipped += 1
